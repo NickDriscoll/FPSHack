@@ -297,7 +297,7 @@ namespace FPSHack
                     zPosAddr = (IntPtr)0x01AA550C;
                     //yVelocityAddr = (IntPtr)
                     xMouseAddr = (IntPtr)0x01AA55F8;
-                    //healthAddr = (IntPtr)0x012886A0;
+                    //healthAddr = (IntPtr)
                     primaryAmmoAddr = (IntPtr)0x01AA5854;
                 }
             }

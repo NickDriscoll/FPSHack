@@ -7,3 +7,6 @@ C:\Users\Nick\Documents\Visual Studio 2013\Projects\Mw2Hack\Mw2Hack\bin\Debug\FP
 C:\Users\Nick\Documents\Visual Studio 2013\Projects\Mw2Hack\Mw2Hack\bin\Debug\FPSHack.pdb
 C:\Users\Nick\Documents\Visual Studio 2013\Projects\Mw2Hack\Mw2Hack\obj\Debug\FPSHack.exe
 C:\Users\Nick\Documents\Visual Studio 2013\Projects\Mw2Hack\Mw2Hack\obj\Debug\FPSHack.pdb
+C:\Users\Nick\Documents\Visual Studio 2013\Projects\FPSHack\Mw2Hack\bin\Debug\FPSHack.exe.config
+C:\Users\Nick\Documents\Visual Studio 2013\Projects\FPSHack\Mw2Hack\obj\Debug\FPSHack.exe
+C:\Users\Nick\Documents\Visual Studio 2013\Projects\FPSHack\Mw2Hack\obj\Debug\FPSHack.pdb

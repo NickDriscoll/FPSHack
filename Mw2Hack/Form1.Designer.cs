@@ -42,6 +42,12 @@
             this.healthLabel = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.label6 = new System.Windows.Forms.Label();
+            this.slopeLabel = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.angleLabel = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.directionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -160,12 +166,85 @@
             // timer2
             // 
             this.timer2.Enabled = true;
+            this.timer2.Interval = 1;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // timer3
             // 
             this.timer3.Interval = 1;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label6.Location = new System.Drawing.Point(251, 229);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(64, 24);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "Slope:";
+            // 
+            // slopeLabel
+            // 
+            this.slopeLabel.AutoSize = true;
+            this.slopeLabel.BackColor = System.Drawing.Color.Transparent;
+            this.slopeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.slopeLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.slopeLabel.Location = new System.Drawing.Point(331, 229);
+            this.slopeLabel.Name = "slopeLabel";
+            this.slopeLabel.Size = new System.Drawing.Size(64, 24);
+            this.slopeLabel.TabIndex = 10;
+            this.slopeLabel.Text = "Slope:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.Transparent;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label7.Location = new System.Drawing.Point(251, 279);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(65, 24);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "Angle:";
+            // 
+            // angleLabel
+            // 
+            this.angleLabel.AutoSize = true;
+            this.angleLabel.BackColor = System.Drawing.Color.Transparent;
+            this.angleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.angleLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.angleLabel.Location = new System.Drawing.Point(330, 279);
+            this.angleLabel.Name = "angleLabel";
+            this.angleLabel.Size = new System.Drawing.Size(65, 24);
+            this.angleLabel.TabIndex = 12;
+            this.angleLabel.Text = "Angle:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label8.Location = new System.Drawing.Point(211, 153);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(140, 24);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "playerDirection:";
+            // 
+            // directionLabel
+            // 
+            this.directionLabel.AutoSize = true;
+            this.directionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.directionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.directionLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.directionLabel.Location = new System.Drawing.Point(357, 153);
+            this.directionLabel.Name = "directionLabel";
+            this.directionLabel.Size = new System.Drawing.Size(82, 24);
+            this.directionLabel.TabIndex = 14;
+            this.directionLabel.Text = "direction";
             // 
             // Form1
             // 
@@ -174,6 +253,12 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(519, 331);
+            this.Controls.Add(this.directionLabel);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.angleLabel);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.slopeLabel);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.healthLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -205,6 +290,12 @@
         private System.Windows.Forms.Label healthLabel;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label slopeLabel;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label angleLabel;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label directionLabel;
     }
 }
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ProcessMemoryReaderLib;
 
 namespace FPSHack
@@ -33,8 +34,14 @@ namespace FPSHack
         IntPtr xPosAddr;
         IntPtr yPosAddr;
         IntPtr zPosAddr;
+        IntPtr enemyXPosAddr;
+        IntPtr enemyYPosAddr;
+        IntPtr enemyZPosAddr;
         IntPtr yVelocityAddr;
         IntPtr xMouseAddr;
+        IntPtr writableXMouseAddr;
+        IntPtr yMouseAddr;
+        IntPtr writableYMouseAddr;
         IntPtr healthAddr;
         IntPtr primaryAmmoAddr;
 
@@ -58,7 +65,17 @@ namespace FPSHack
         }
         
         ProcessMemoryReader pReader = new ProcessMemoryReader();
-        
+
+        float slope;
+        float yawAngle;
+        float pitchAngle;
+        float playerYaw;
+        float playerPitch;
+        float playerHeight;
+        float enemyHeight;
+        float heightDifference;
+        float distance;
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             //All of this code is what shows the player's position in the app window.
@@ -79,6 +96,36 @@ namespace FPSHack
 
             ProcessMemoryReaderApi.ReadProcessMemory(processHandle, healthAddr, buffer, (uint)buffer.Length, out bytesRead);
             healthLabel.Text = "2147483647 / 100";
+
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, xPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+            float x1 = BitConverter.ToSingle(buffer, 0);
+
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, enemyXPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+            float x2 = BitConverter.ToSingle(buffer, 0);
+
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, zPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+            float z1 = BitConverter.ToSingle(buffer, 0);
+
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, enemyZPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+            float z2 = BitConverter.ToSingle(buffer, 0);
+
+            slope = ((z2 - z1) / (x2 - x1));
+
+            yawAngle = (float)(Math.Atan2((z2 - z1), (x2 - x1)) * (180 / Math.PI));
+
+            slopeLabel.Text = slope.ToString();
+            angleLabel.Text = yawAngle.ToString();
+
+            distance = (float)(Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((z2 - z1), 2)));
+
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, yPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+            playerHeight = BitConverter.ToSingle(buffer, 0);
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, enemyYPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+            enemyHeight = BitConverter.ToSingle(buffer, 0);
+
+            heightDifference = playerHeight - enemyHeight;
+
+            pitchAngle = (float)((Math.Atan2(heightDifference, distance)) * (180 / Math.PI));
 
             //This code gives the player infinite health
             byte[] healthValue = BitConverter.GetBytes(2147483647);
@@ -293,8 +340,14 @@ namespace FPSHack
                     xPosAddr = (IntPtr)0x013255C4;
                     yPosAddr = (IntPtr)0x013255CC;
                     zPosAddr = (IntPtr)0x013255C8;
+                    enemyXPosAddr = (IntPtr)0x01328748;
+                    enemyYPosAddr = (IntPtr)0x01328750;
+                    enemyZPosAddr = (IntPtr)0x0132874C;
                     //yVelocityAddr = (IntPtr)
                     xMouseAddr = (IntPtr)0x013256B4;
+                    writableXMouseAddr = (IntPtr)0x00C84FDC;
+                    yMouseAddr = (IntPtr)0x013256B0;
+                    writableYMouseAddr = (IntPtr)0x00C84FD8;
                     healthAddr = (IntPtr)0x012886A0;
                     //primaryAmmoAddr
 
@@ -327,7 +380,24 @@ namespace FPSHack
 
         private void timer3_Tick(object sender, EventArgs e)
         {
+            IntPtr bytesRead;
+            byte[] buffer = new byte[8];
 
+            //actual aimbot code for horizontal plane
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, xMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
+            playerYaw = BitConverter.ToSingle(buffer, 0);
+
+            directionLabel.Text = playerYaw.ToString();
+
+            byte[] binNewYaw = BitConverter.GetBytes(yawAngle - 42);
+            ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, writableXMouseAddr, binNewYaw, (uint)binNewYaw.Length, out bytesRead);
+
+            //aimbot code for vertical plane
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, yMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
+            playerPitch = BitConverter.ToSingle(buffer, 0);
+
+            byte[] binNewPitch = BitConverter.GetBytes(pitchAngle + 2);
+            ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, writableYMouseAddr, binNewPitch, (uint)binNewPitch.Length, out bytesRead);
         }
     }
 }

@@ -59,9 +59,7 @@ namespace FPSHack
             RegisterHotKey(this.Handle, 6, (uint)Modifiers.None, (uint)Keys.D2);
             RegisterHotKey(this.Handle, 7, (uint)Modifiers.None, (uint)Keys.Up);
             RegisterHotKey(this.Handle, 8, (uint)Modifiers.None, (uint)Keys.H);
-            #endregion
-
-            
+            #endregion            
         }
         
         ProcessMemoryReader pReader = new ProcessMemoryReader();
@@ -75,6 +73,7 @@ namespace FPSHack
         float enemyHeight;
         float heightDifference;
         float distance;
+        float readWriteXMouseDiff;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -97,6 +96,7 @@ namespace FPSHack
             ProcessMemoryReaderApi.ReadProcessMemory(processHandle, healthAddr, buffer, (uint)buffer.Length, out bytesRead);
             healthLabel.Text = "2147483647 / 100";
 
+            //starting here is aimbot math
             ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, xPosAddr, buffer, (uint)buffer.Length, out bytesRead);
             float x1 = BitConverter.ToSingle(buffer, 0);
 
@@ -110,7 +110,7 @@ namespace FPSHack
             float z2 = BitConverter.ToSingle(buffer, 0);
 
             slope = ((z2 - z1) / (x2 - x1));
-
+                        
             yawAngle = (float)(Math.Atan2((z2 - z1), (x2 - x1)) * (180 / Math.PI));
 
             slopeLabel.Text = slope.ToString();

@@ -51,6 +51,7 @@ namespace FPSHack
             RegisterHotKey(this.Handle, 5, (uint)Modifiers.None, (uint)Keys.NumPad2);
             RegisterHotKey(this.Handle, 6, (uint)Modifiers.None, (uint)Keys.D2);
             RegisterHotKey(this.Handle, 7, (uint)Modifiers.None, (uint)Keys.Up);
+            RegisterHotKey(this.Handle, 8, (uint)Modifiers.None, (uint)Keys.H);
             #endregion
 
             
@@ -95,6 +96,8 @@ namespace FPSHack
         byte[] savedXPos2;
         byte[] savedYPos2;
         byte[] savedZPos2;
+
+        bool aimbotIsOn = false;
 
         protected override void WndProc(ref Message m)
         {
@@ -237,7 +240,19 @@ namespace FPSHack
                         byte[] finalMovement = BitConverter.GetBytes(movement);
                         ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, zPosAddr, finalMovement, (uint)finalMovement.Length, out bytesRead);
                     }
-
+                }                
+                else if (m.WParam == (IntPtr)8)
+                {
+                    if (aimbotIsOn == true)
+                    {
+                        timer3.Enabled = false;
+                        aimbotIsOn = false;
+                    }
+                    else
+                    {
+                        timer3.Enabled = true;
+                        aimbotIsOn = true;
+                    }
                 }
             }
             base.WndProc(ref m);
@@ -307,6 +322,11 @@ namespace FPSHack
                 timer1.Enabled = true;
                 timer2.Enabled = false;
             }
+
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
 
         }
     }

@@ -44,6 +44,7 @@ namespace FPSHack
         IntPtr writableYMouseAddr;
         IntPtr healthAddr;
         IntPtr primaryAmmoAddr;
+        IntPtr primaryAmmoAddrPointer;
 
         public Form1()
         {
@@ -74,6 +75,7 @@ namespace FPSHack
         float heightDifference;
         float distance;
         float readWriteXMouseDiff;
+        float readWriteYMouseDiff;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -132,6 +134,10 @@ namespace FPSHack
             ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, healthAddr, healthValue, 4, out bytesRead);
 
             //This code gives the player infinite primary ammo
+            byte[] fourByteBuffer = new byte[4];
+            ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, primaryAmmoAddrPointer, fourByteBuffer, (uint)fourByteBuffer.Length, out bytesRead);
+            primaryAmmoAddr = (IntPtr)(BitConverter.ToInt32(fourByteBuffer, 0) + 0x44C);
+
             byte[] ammoValue = BitConverter.GetBytes(2147483647);
             ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, primaryAmmoAddr, ammoValue, 4, out bytesRead);
         }
@@ -299,6 +305,27 @@ namespace FPSHack
                     {
                         timer3.Enabled = true;
                         aimbotIsOn = true;
+
+                        //defining the difference between the readable and writable X address values.
+                        IntPtr bytesRead;
+                        byte[] buffer = new byte[8];
+
+                        ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, xMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
+                        float readXMouseValue = BitConverter.ToSingle(buffer, 0);
+
+                        ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, writableXMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
+                        float writeXMouseValue = BitConverter.ToSingle(buffer, 0);
+
+                        readWriteXMouseDiff = readXMouseValue - writeXMouseValue;
+
+                        //defining the difference between the readable and writable Y address value
+                        ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, yMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
+                        float readYMouseValue = BitConverter.ToSingle(buffer, 0);
+
+                        ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, writableYMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
+                        float writeYMouseValue = BitConverter.ToSingle(buffer, 0);
+
+                        readWriteYMouseDiff = readYMouseValue - writeYMouseValue;
                     }
                 }
             }
@@ -349,7 +376,7 @@ namespace FPSHack
                     yMouseAddr = (IntPtr)0x013256B0;
                     writableYMouseAddr = (IntPtr)0x00C84FD8;
                     healthAddr = (IntPtr)0x012886A0;
-                    //primaryAmmoAddr
+                    primaryAmmoAddr = (IntPtr)0x013255A8;
 
                     break;
                 }
@@ -366,7 +393,7 @@ namespace FPSHack
                     //yVelocityAddr = (IntPtr)
                     xMouseAddr = (IntPtr)0x01AA55F8;
                     //healthAddr = (IntPtr)
-                    primaryAmmoAddr = (IntPtr)0x01AA5854;
+                    primaryAmmoAddrPointer = (IntPtr)0x0128865C;
                 }
             }
 
@@ -389,14 +416,14 @@ namespace FPSHack
 
             directionLabel.Text = playerYaw.ToString();
 
-            byte[] binNewYaw = BitConverter.GetBytes(yawAngle - 42);
+            byte[] binNewYaw = BitConverter.GetBytes(yawAngle - readWriteXMouseDiff);
             ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, writableXMouseAddr, binNewYaw, (uint)binNewYaw.Length, out bytesRead);
 
             //aimbot code for vertical plane
             ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, yMouseAddr, buffer, (uint)buffer.Length, out bytesRead);
             playerPitch = BitConverter.ToSingle(buffer, 0);
 
-            byte[] binNewPitch = BitConverter.GetBytes(pitchAngle + 2);
+            byte[] binNewPitch = BitConverter.GetBytes(pitchAngle + 2 - readWriteYMouseDiff);
             ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, writableYMouseAddr, binNewPitch, (uint)binNewPitch.Length, out bytesRead);
         }
     }

@@ -60,6 +60,7 @@ namespace FPSHack
             RegisterHotKey(this.Handle, 6, (uint)Modifiers.None, (uint)Keys.D2);
             RegisterHotKey(this.Handle, 7, (uint)Modifiers.None, (uint)Keys.Up);
             RegisterHotKey(this.Handle, 8, (uint)Modifiers.None, (uint)Keys.H);
+            RegisterHotKey(this.Handle, 9, (uint)Modifiers.None, (uint)Keys.J);
             #endregion            
         }
         
@@ -151,6 +152,7 @@ namespace FPSHack
         byte[] savedZPos2;
 
         bool aimbotIsOn = false;
+        bool autofireIsOn = false;
 
         protected override void WndProc(ref Message m)
         {
@@ -159,26 +161,24 @@ namespace FPSHack
             {
                 if (m.WParam == (IntPtr)1)
                 {
-                    IntPtr processHandle = ProcessMemoryReaderApi.OpenProcess(ProcessMemoryReaderApi.PROCESS_VM_READ, 0, (uint)process.Id);
-
                     IntPtr bytesRead = (IntPtr)0;
                     byte[] bufferX = new byte[8];
                     byte[] bufferY = new byte[8];
                     byte[] bufferZ = new byte[8];
                                         
-                    ProcessMemoryReaderApi.ReadProcessMemory(processHandle, xPosAddr, bufferX, (uint)bufferX.Length, out bytesRead);
+                    ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, xPosAddr, bufferX, (uint)bufferX.Length, out bytesRead);
                     savedXPos1 = bufferX;
 
-                    ProcessMemoryReaderApi.ReadProcessMemory(processHandle, yPosAddr, bufferY, (uint)bufferY.Length, out bytesRead);
+                    ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, yPosAddr, bufferY, (uint)bufferY.Length, out bytesRead);
                     savedYPos1 = bufferY;
 
-                    ProcessMemoryReaderApi.ReadProcessMemory(processHandle, zPosAddr, bufferZ, (uint)bufferZ.Length, out bytesRead);
+                    ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, zPosAddr, bufferZ, (uint)bufferZ.Length, out bytesRead);
                     savedZPos1 = bufferZ;
 
                 }
                 else if (m.WParam == (IntPtr)2)
                 {
-                    IntPtr store = (IntPtr)0;
+                    IntPtr store;
 
                     ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, xPosAddr, savedXPos1, 8, out store);
                     ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, yPosAddr, savedYPos1, 8, out store);
@@ -186,12 +186,11 @@ namespace FPSHack
                 }
                 else if (m.WParam == (IntPtr)3)
                 {
-                    IntPtr processHandle = ProcessMemoryReaderApi.OpenProcess(ProcessMemoryReaderApi.PROCESS_VM_READ, 0, (uint)process.Id);
                     IntPtr bytesRead;
                     IntPtr store;
 
                     byte[] buffer = new byte[8];
-                    ProcessMemoryReaderApi.ReadProcessMemory(processHandle, yPosAddr, buffer, (uint)buffer.Length, out bytesRead);
+                    ProcessMemoryReaderApi.ReadProcessMemory(process.Handle, yPosAddr, buffer, (uint)buffer.Length, out bytesRead);
                     byte[] currentY = buffer;
                     float floatY = BitConverter.ToSingle(currentY, 0);
                     float addedY = floatY + 300;
@@ -205,7 +204,7 @@ namespace FPSHack
                 {
                     IntPtr store;
 
-                    byte[] accelerationY = { 0x00000000 };
+                    byte[] accelerationY = { 0x00 };
                     ProcessMemoryReaderApi.WriteProcessMemory(process.Handle, yVelocityAddr, accelerationY, 4, out store);
                 }
                 else if (m.WParam == (IntPtr)5)
@@ -327,6 +326,10 @@ namespace FPSHack
 
                         readWriteYMouseDiff = readYMouseValue - writeYMouseValue;
                     }
+                }
+                else if (m.WParam == (IntPtr)9)
+                {
+
                 }
             }
             base.WndProc(ref m);

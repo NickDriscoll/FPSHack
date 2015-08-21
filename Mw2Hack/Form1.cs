@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -19,6 +20,9 @@ namespace FPSHack
         //Imports RegisterHotKey method
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern bool RegisterHotKey(IntPtr windowHandle, int hotkeyIdentifier, uint modifierCode, uint keyCode);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
 
         //Creates enumerator for the modifier keys
         [Flags]
@@ -61,7 +65,7 @@ namespace FPSHack
             RegisterHotKey(this.Handle, 7, (uint)Modifiers.None, (uint)Keys.Up);
             RegisterHotKey(this.Handle, 8, (uint)Modifiers.None, (uint)Keys.H);
             RegisterHotKey(this.Handle, 9, (uint)Modifiers.None, (uint)Keys.J);
-            #endregion            
+            #endregion
         }
         
         ProcessMemoryReader pReader = new ProcessMemoryReader();
@@ -152,7 +156,6 @@ namespace FPSHack
         byte[] savedZPos2;
 
         bool aimbotIsOn = false;
-        bool autofireIsOn = false;
 
         protected override void WndProc(ref Message m)
         {
@@ -161,7 +164,7 @@ namespace FPSHack
             {
                 if (m.WParam == (IntPtr)1)
                 {
-                    IntPtr bytesRead = (IntPtr)0;
+                    IntPtr bytesRead;
                     byte[] bufferX = new byte[8];
                     byte[] bufferY = new byte[8];
                     byte[] bufferZ = new byte[8];
@@ -347,8 +350,8 @@ namespace FPSHack
                 {
                     process = processList[i];
 
-                    label1.Text = "Mw2 Hack";
-                    this.Text = "Mw2 Hack";
+                    label1.Text = "Mw2 MultiHack";
+                    this.Text = "Mw2 MultiHack";
 
                     xPosAddr = (IntPtr)0x0108DC84;
                     yPosAddr = (IntPtr)0x0108DC8C;
@@ -364,8 +367,8 @@ namespace FPSHack
                 {
                     process = processList[i];
 
-                    label1.Text = "Cod4 Hack";
-                    this.Text = "Cod4 Hack";
+                    label1.Text = "Cod4 MultiHack";
+                    this.Text = "Cod4 MultiHack";
 
                     xPosAddr = (IntPtr)0x013255C4;
                     yPosAddr = (IntPtr)0x013255CC;
@@ -387,8 +390,8 @@ namespace FPSHack
                 {
                     process = processList[i];
 
-                    label1.Text = "Mw2 Hack";
-                    this.Text = "Mw2 Hack";
+                    label1.Text = "Mw2 MultiHack";
+                    this.Text = "Mw2 MultiHack";
 
                     xPosAddr = (IntPtr)0x01AA5504;
                     yPosAddr = (IntPtr)0x01AA5508;
@@ -397,12 +400,15 @@ namespace FPSHack
                     xMouseAddr = (IntPtr)0x01AA55F8;
                     //healthAddr = (IntPtr)
                     primaryAmmoAddrPointer = (IntPtr)0x0128865C;
+
+                    break;
                 }
             }
 
             if (process != null)
             {
                 timer1.Enabled = true;
+                timer4.Enabled = true;
                 timer2.Enabled = false;
             }
 

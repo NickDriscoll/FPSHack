@@ -48,6 +48,7 @@
             this.angleLabel = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.directionLabel = new System.Windows.Forms.Label();
+            this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -246,6 +247,10 @@
             this.directionLabel.TabIndex = 14;
             this.directionLabel.Text = "direction";
             // 
+            // timer4
+            // 
+            this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -296,6 +301,7 @@
         private System.Windows.Forms.Label angleLabel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label directionLabel;
+        private System.Windows.Forms.Timer timer4;
     }
 }
 
